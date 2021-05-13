@@ -49,7 +49,7 @@ Try to use large cap stocks or even indeces to receive good results. Going too f
 ticker = st.text_area("Stock Ticker (make sure to enter correct ticker);", "TSLA;30;400")
 
 input = list(ticker.split(";"))
-stock=input[0]
+stock_ticker=input[0]
 try:
     t_intervals=int(input[1])
     iterations=int(input[2])
@@ -72,7 +72,7 @@ col1, col2 = st.beta_columns(2)
 col1.header("Closing Price")
 #ticker = "TSLA"
 try:
-    stock = wb.DataReader(stock, data_source='yahoo', start='2020-07-01')['Adj Close']
+    stock = wb.DataReader(stock_ticker, data_source='yahoo', start='2020-07-01')['Adj Close']
 except:
     stock = wb.DataReader("TSLA", data_source='yahoo', start='2020-07-01')['Adj Close']
     st.write("Wrong Ticker Symbol! - ticker set to TSLA")

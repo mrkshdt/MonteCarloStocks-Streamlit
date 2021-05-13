@@ -71,7 +71,12 @@ col1, col2 = st.beta_columns(2)
 
 col1.header("Closing Price")
 #ticker = "TSLA"
-stock = wb.DataReader(ticker, data_source='yahoo', start='2020-07-01')['Adj Close']
+try:
+    stock = wb.DataReader(ticker, data_source='yahoo', start='2020-07-01')['Adj Close']
+except:
+    stock = wb.DataReader("TSLA", data_source='yahoo', start='2020-07-01')['Adj Close']
+    st.write("Wrong Ticker Symbol! - ticker set to TSLA")
+
 col1.line_chart(stock)
 log_returns = np.log(1 + stock.pct_change())
 col1.header("Log Returns")

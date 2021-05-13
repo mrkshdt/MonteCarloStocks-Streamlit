@@ -40,10 +40,14 @@ There are risks associated with investing in securities. Investing in stocks, bo
 
 learn = st.beta_expander("Learn more")
 learn.write("""
+Feedback and free access + updates: https://forms.gle/E1QCPs5KKQLbAQdX6
+
 Usage: Ticker;PredictingDays;Simulations
 
 Try to use large cap stocks or even indeces to receive good results. Going too far into the future doesn't make sense because you can't predict certain events which might influence the price. For testing purposes I restricted the simulations to 400. Monte Carlo will never be a buy argument on it's own, make sure to research all stocks you consider buying.
 """)
+
+
 
 ## Input Kram
 ticker = st.text_area("Stock Ticker (make sure to enter correct ticker);", "TSLA;30;400")

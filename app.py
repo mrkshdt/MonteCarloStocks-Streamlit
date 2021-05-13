@@ -65,17 +65,18 @@ if t_intervals>30:
     t_intervals=30
     st.write("Don't simulate more than 30 Days - t_intervals set to 400")
 
-
-## Output Kram
-col1, col2 = st.beta_columns(2)
-
-col1.header("Closing Price")
-#ticker = "TSLA"
 try:
     stock = wb.DataReader(stock_ticker, data_source='yahoo', start='2020-07-01')['Adj Close']
 except:
     stock = wb.DataReader("TSLA", data_source='yahoo', start='2020-07-01')['Adj Close']
     st.write("Wrong Ticker Symbol! - ticker set to TSLA")
+
+
+## Output Kram
+
+col1, col2 = st.beta_columns(2)
+
+col1.header("Closing Price")
 
 col1.line_chart(stock)
 log_returns = np.log(1 + stock.pct_change())

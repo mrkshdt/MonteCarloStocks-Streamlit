@@ -46,7 +46,7 @@ Try to use large cap stocks or even indeces to receive good results. Going too f
 """)
 
 ## Input Kram
-ticker = st.text_area("Stock Ticker (make sure to enter correct ticker);", "^GSPC")
+ticker = st.text_area("Stock Ticker (make sure to enter correct ticker);", "TSLA;30;400")
 
 input = list(ticker.split(";"))
 stock=input[0]

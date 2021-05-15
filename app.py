@@ -6,6 +6,8 @@ import numpy as np
 from scipy import stats
 from scipy.stats import norm
 
+import datetime
+
 max_width = 100
 
 
@@ -50,29 +52,24 @@ Try to use large cap stocks or even indeces to receive good results. Going too f
 
 
 ## Input Kram
-ticker = st.text_area("Stock Ticker (make sure to enter correct ticker);", "TSLA;30;400")
+st.sidebar.subheader("Parameters")
 
-input = list(ticker.split(";"))
-stock_ticker=input[0]
-try:
-    t_intervals=int(input[1])
-    iterations=int(input[2])
-except:
-    t_intervals=25
-    iterations=200
+ticker_list = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/s-and-p-500-companies/master/data/constituents_symbols.txt')
+tickerSymbol = st.sidebar.selectbox('Stock ticker', ticker_list) # Select ticker symbol
 
-if iterations >400:
-    iterations=400
-    st.write("Don't use more than 400 Simulations - iterations set to 400")
+t_intervals = st.sidebar.slider('Number of predicting Days', min_value=1, max_value=30,value=14) # Select ticker symbol
+iterations = st.sidebar.slider('Number of Simulations', min_value=1, max_value=400,value=200)
 
-if t_intervals>30:
-    t_intervals=30
-    st.write("Don't simulate more than 30 Days - t_intervals set to 400")
+option = st.sidebar.radio('Risk Affinity', ['high', 'neutral', 'low'])
+
+start_date = st.sidebar.date_input("Start Date (Optional)",datetime.date(2021,1,1))
+end_date = st.sidebar.date_input("Ende Date (Optional)")
+
 
 try:
-    stock = wb.DataReader(stock_ticker, data_source='yahoo', start='2020-07-01')['Adj Close']
+    stock = wb.DataReader(tickerSymbol, data_source='yahoo', start=start_date, end=end_date)['Adj Close']
 except:
-    stock = wb.DataReader("TSLA", data_source='yahoo', start='2020-07-01')['Adj Close']
+    stock = wb.DataReader("TSLA", data_source='yahoo', start=start_date, end=end_date)['Adj Close']
     st.write("Wrong Ticker Symbol! - ticker set to TSLA")
 
 
@@ -80,12 +77,12 @@ except:
 
 col1, col2 = st.beta_columns(2)
 
-col1.header("Closing Price")
+col2.header("Closing Price")
 
-col1.line_chart(stock)
+col2.line_chart(stock)
 log_returns = np.log(1 + stock.pct_change())
-col1.header("Log Returns")
-col1.line_chart(log_returns)
+col2.header("Log Returns")
+col2.line_chart(log_returns)
 
 def monte(stock,t_intervals=14,iterations=400):
     log_returns = np.log(1 + stock.pct_change())
@@ -117,5 +114,7 @@ def monte(stock,t_intervals=14,iterations=400):
 
 
 result = monte(stock,int(t_intervals),int(iterations))
-col2.header("Monte Carlo Simulation")
-col2.line_chart(result[200:])
+col1.header("Monte Carlo Simulation")
+col1.line_chart(result)
+
+print(result[-1])

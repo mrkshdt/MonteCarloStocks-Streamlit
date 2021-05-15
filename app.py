@@ -54,15 +54,25 @@ Try to use large cap stocks or even indeces to receive good results. Going too f
 ## Input Kram
 st.sidebar.subheader("Parameters")
 
-ticker_list = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/s-and-p-500-companies/master/data/constituents_symbols.txt')
+#ticker_list = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/s-and-p-500-companies/master/data/constituents_symbols.txt')
+ticker_list = pd.read_csv('bats_symbols.csv')
+
+ticker_list = list(ticker_list["Name"])
+ticker_list.append('TSLA')
+ticker_list.append('BNGO')
+ticker_list.append('GSAT')
+ticker_list.append('ASXC')
+ticker_list = sorted(ticker_list)
+
 tickerSymbol = st.sidebar.selectbox('Stock ticker', ticker_list) # Select ticker symbol
+
 
 t_intervals = st.sidebar.slider('Number of predicting Days', min_value=1, max_value=30,value=14) # Select ticker symbol
 iterations = st.sidebar.slider('Number of Simulations', min_value=1, max_value=400,value=200)
 
 option = st.sidebar.radio('Risk Affinity', ['high', 'neutral', 'low'])
 
-start_date = st.sidebar.date_input("Start Date (Optional)",datetime.date(2021,1,1))
+start_date = st.sidebar.date_input("Start Date (Optional)",datetime.date(2019,1,1))
 end_date = st.sidebar.date_input("Ende Date (Optional)")
 
 

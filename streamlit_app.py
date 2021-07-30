@@ -48,7 +48,7 @@ except:
 tickerSymbol = "TSLA"
 tickerData = yf.Ticker(tickerSymbol)
 string_logo = '<img src=%s>' % tickerData.info['logo_url']
-st.sidebar.markdown(string_logo, unsafe_allow_html=True)
+st.markdown(string_logo, unsafe_allow_html=True)
 
 ## Get full company name
 string_name = tickerData.info['longName']

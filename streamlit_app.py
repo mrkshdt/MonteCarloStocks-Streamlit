@@ -52,11 +52,11 @@ col1.markdown(string_logo, unsafe_allow_html=True)
 
 ## Get full company name
 string_name = tickerData.info['longName']
-col2.header('**%s**' % string_name)
+col1.header('**%s**' % string_name)
 
 ## Get business summary
 string_summary = tickerData.info['longBusinessSummary']
-st.info(string_summary)
+col2.info(string_summary)
 
 print(tickerData.info)
 

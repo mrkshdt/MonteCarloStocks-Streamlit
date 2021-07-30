@@ -26,9 +26,14 @@ st.markdown(
         unsafe_allow_html=True,
     )
 
-## Control Panel
-st.sidebar.subheader("Parameters")
+# Control Panel
 
+## Get company logo
+tickerData = yf.Ticker(tickerSymbol)
+string_logo = '<img src=%s>' % tickerData.info['logo_url']
+st.sidebar.markdown(string_logo, unsafe_allow_html=True)
+
+st.sidebar.subheader("Parameters")
 tickerSymbol = st.sidebar.text_area('Stock ticker', "TSLA") # Select ticker symbol
 t_intervals = st.sidebar.slider('Number of predicting Days', min_value=1, max_value=30,value=14) # Select ticker symbol
 iterations = st.sidebar.slider('Number of Simulations', min_value=1, max_value=400,value=200)
@@ -43,10 +48,7 @@ except:
     stock = wb.get_data_yahoo("^GSPC", data_source='yahoo', start=start_date, end=end_date)['Adj Close']
 
 
-## Get company logo
-tickerData = yf.Ticker(tickerSymbol)
-string_logo = '<img src=%s>' % tickerData.info['logo_url']
-st.markdown(string_logo, unsafe_allow_html=True)
+
 
 ## Get full company name
 string_name = tickerData.info['longName']

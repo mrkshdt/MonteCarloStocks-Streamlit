@@ -2,12 +2,13 @@ import streamlit as st
 
 import pandas as pd
 from pandas_datareader import data as wb
-import numpy as np
-from scipy import stats
-from scipy.stats import norm
 
 import cufflinks as cf
 import yfinance as yf
+
+from MonteCarloTS import MonteCarloSimulator
+
+yf.pdr_override()
 
 import datetime
 
@@ -30,15 +31,7 @@ st.markdown(
 ## Input Kram
 st.sidebar.subheader("Parameters")
 
-#ticker_list = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/s-and-p-500-companies/master/data/constituents_symbols.txt')
-ticker_list = pd.read_csv('bats_symbols.csv')
 
-ticker_list = list(ticker_list["Name"])
-ticker_list.append('TSLA')
-ticker_list.append('BNGO')
-ticker_list.append('GSAT')
-ticker_list.append('ASXC')
-ticker_list = sorted(ticker_list)
 
 tickerSymbol = st.sidebar.text_area('Stock ticker', "TSLA") # Select ticker symbol
 
@@ -51,11 +44,12 @@ start_date = st.sidebar.date_input("Start Date (Optional)",datetime.date(2019,1,
 end_date = st.sidebar.date_input("Ende Date (Optional)")
 
 try:
-    stock = wb.DataReader(tickerSymbol, data_source='yahoo', start=start_date, end=end_date)['Adj Close']
+    stock = wb.get_data_yahoo(tickerSymbol, data_source='yahoo', start=start_date, end=end_date)['Adj Close']
+    #print(stock)
 except:
-    stock = wb.DataReader("TSLA", data_source='yahoo', start=start_date, end=end_date)['Adj Close']
-    st.write("Wrong Ticker Symbol! - ticker set to TSLA")
-
+    stock = wb.get_data_yahoo("^GSPC", data_source='yahoo', start=start_date, end=end_date)['Adj Close']
+    #st.write("Wrong Ticker Symbol! - ticker set to TSLA")
+    print(stock)
 
 
 ## Output Kram
@@ -70,9 +64,6 @@ st.header('**%s**' % string_name)
 string_summary = tickerData.info['longBusinessSummary']
 st.info(string_summary)
 
-
-
-
 col1, col2 = st.beta_columns(2)
 
 tickerDf = tickerData.history(period='1d', start=start_date, end=end_date) #get the historical prices for this ticker
@@ -82,40 +73,12 @@ qf.add_bollinger_bands()
 fig = qf.iplot(asFigure=True)
 col2.plotly_chart(fig)
 
-def monte(stock,t_intervals=14,iterations=400):
-    log_returns = np.log(1 + stock.pct_change())
-    u = log_returns.mean()
-    var = log_returns.var()
-    drift = u - (0.3 * var)
-    stdev = log_returns.std()
+mcs = MonteCarloSimulator(stock)
 
-    daily_returns = np.exp(drift + stdev * norm.ppf(np.random.rand(t_intervals, iterations),loc=-0.09))
+result = mcs.simulate(int(t_intervals),int(iterations))
 
-    S0 = stock.iloc[-1]
-    price_list = np.zeros_like(daily_returns)
-    price_list[0] = S0
-    for t in range(1, t_intervals):
-        price_list[t] = price_list[t - 1] * daily_returns[t]
-
-    def list_correct(data,price_list):
-        new = []
-        for i in range(0,len(data)+len(price_list)):
-            if i<len(data):
-                tmp = [data.values[i] for z in range(iterations)]
-                new.append(tmp)
-            else:
-                new.append(price_list[i-len(data)])
-        return new
-
-    result = list_correct(stock, price_list)
-    return result
-
-
-result = monte(stock,int(t_intervals),int(iterations))
 col1.header("Monte Carlo Simulation %s"%string_name)
-col1.line_chart(result[-200:])
-
-print(result[-1])
+col1.line_chart(mcs.simulation[-200:])
 
 expander = st.beta_expander("Disclaimer - NO FINANCIAL ADVICE")
 expander.write("""NO INVESTMENT ADVICE

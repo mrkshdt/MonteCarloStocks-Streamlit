@@ -28,12 +28,6 @@ st.markdown(
 
 # Control Panel
 
-## Get company logo
-tickerSymbol = "TSLA"
-tickerData = yf.Ticker(tickerSymbol)
-string_logo = '<img src=%s>' % tickerData.info['logo_url']
-st.sidebar.markdown(string_logo, unsafe_allow_html=True)
-
 st.sidebar.subheader("Parameters")
 tickerSymbol = st.sidebar.text_area('Stock ticker', "TSLA") # Select ticker symbol
 t_intervals = st.sidebar.slider('Number of predicting Days', min_value=1, max_value=30,value=14) # Select ticker symbol

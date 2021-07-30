@@ -42,16 +42,17 @@ try:
 except:
     stock = wb.get_data_yahoo("^GSPC", data_source='yahoo', start=start_date, end=end_date)['Adj Close']
 
-
+## Different columns for plots
+col1, col2 = st.beta_columns((1,5))
 
 ## Get company logo
 tickerData = yf.Ticker(tickerSymbol)
 string_logo = '<img src=%s>' % tickerData.info['logo_url']
-st.markdown(string_logo, unsafe_allow_html=True)
+col1.markdown(string_logo, unsafe_allow_html=True)
 
 ## Get full company name
 string_name = tickerData.info['longName']
-st.header('**%s**' % string_name)
+col2.header('**%s**' % string_name)
 
 ## Get business summary
 string_summary = tickerData.info['longBusinessSummary']
@@ -61,24 +62,24 @@ print(tickerData.info)
 
 
 ## Different columns for plots
-col1, col2 = st.beta_columns(2)
+c1, c2 = st.beta_columns(2)
 
 
 ## Bollinger Bands from QuantFig
 tickerDf = tickerData.history(period='1d', start=start_date, end=end_date) #get the historical prices for this ticker
-col2.header('**Bollinger Bands **')
+c2.header('**Bollinger Bands **')
 qf=cf.QuantFig(tickerDf,title='%s'%string_name,legend='top',name='GS')
 qf.add_bollinger_bands()
 fig = qf.iplot(asFigure=True)
-col2.plotly_chart(fig)
+c2.plotly_chart(fig)
 
 ## feed MCS with data
 mcs = MonteCarloSimulator(stock)
 result = mcs.simulate(int(t_intervals),int(iterations))
 
 ## Viz simulation simple
-col1.header("Monte Carlo Simulation %s"%string_name)
-col1.line_chart(mcs.simulation[-200:])
+c1.header("Monte Carlo Simulation %s"%string_name)
+c1.line_chart(mcs.simulation[-200:])
 
 
 ## Usage Info

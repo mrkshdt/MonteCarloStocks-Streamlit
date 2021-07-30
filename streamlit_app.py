@@ -12,10 +12,6 @@ yf.pdr_override()
 
 import datetime
 
-"""
-Layout:
-"""
-
 max_width = 100
 st.markdown(
         f"""

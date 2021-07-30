@@ -43,7 +43,7 @@ except:
     stock = wb.get_data_yahoo("^GSPC", data_source='yahoo', start=start_date, end=end_date)['Adj Close']
 
 ## Different columns for plots
-col1, col2 = st.beta_columns((1,5))
+col0, col1, col2 = st.beta_columns((1,1,5))
 
 ## Get company logo
 tickerData = yf.Ticker(tickerSymbol)

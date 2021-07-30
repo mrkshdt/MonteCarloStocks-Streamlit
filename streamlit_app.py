@@ -42,7 +42,8 @@ try:
 except:
     stock = wb.get_data_yahoo("^GSPC", data_source='yahoo', start=start_date, end=end_date)['Adj Close']
 
-## Different columns for plots
+## Different columns for Logo and Description
+# col0 for streamlit padding
 col0, col1, col2 = st.beta_columns((0.5,1,5))
 
 ## Get company logo

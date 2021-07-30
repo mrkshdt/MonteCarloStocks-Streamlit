@@ -29,6 +29,7 @@ st.markdown(
 # Control Panel
 
 ## Get company logo
+tickerSymbol = "TSLA"
 tickerData = yf.Ticker(tickerSymbol)
 string_logo = '<img src=%s>' % tickerData.info['logo_url']
 st.sidebar.markdown(string_logo, unsafe_allow_html=True)

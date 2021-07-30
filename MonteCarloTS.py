@@ -6,27 +6,29 @@ import pandas as pd
 
 class MonteCarloSimulator:
     """
-    MonteCarloSimulator object contains 'Adj Close' stock data from a given stock ticker
-    :param data: is used to store the historical stock price
-    :type data: Dataframe
-    :ivar simulation: this is where the result of the simulation is stored
-    :vartype simulation: list of lists
+        MonteCarloSimulator object contains 'Adj Close' stock data from a given stock ticker
+        :param data: is used to store the historical stock price
+        :type data: Dataframe
+        :ivar simulation: this is where the result of the simulation is stored
+        :vartype simulation: list of lists
     """
+
     def __init__(self, data):
         self.data = data
         self.simulation = None
 
     def simulate(self,t_intervals,iterations):
-         """Creating Monte Carlo simulation of future stock prices (can also be used for other time series)
+        """
+            Creating Monte Carlo simulation of future stock prices (can also be used for other time series)
 
-        :param t_intervals: The amount of days that shall be predicted
-        :type amount: int
+            :param t_intervals: The amount of days that shall be predicted
+            :type amount: int
 
-        :param iterations: The amount of simulations that are run
-        :type amount: int
+            :param iterations: The amount of simulations that are run
+            :type amount: int
 
-        :returns: A Car mileage
-        :rtyp
+            :returns: A Car mileage
+            :rtyp
         """
         stock = self.data
         log_returns = np.log(1 + stock.pct_change())
